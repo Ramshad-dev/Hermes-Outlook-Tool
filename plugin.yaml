@@ -1,0 +1,40 @@
+manifest_version: 2
+name: outlook
+version: 0.1.0
+description: "Read, search, draft, and organize Outlook mail through Microsoft Graph. Never sends mail."
+author: "Vajra"
+kind: standalone
+license: "MIT"
+provides_tools:
+  - outlook_list_emails
+  - outlook_search_emails
+  - outlook_get_email
+  - outlook_get_conversation
+  - outlook_list_folders
+  - outlook_list_attachments
+  - outlook_create_draft
+  - outlook_update_draft
+  - outlook_move_email
+  - outlook_copy_email
+  - outlook_archive_email
+  - outlook_update_email
+  - outlook_create_folder
+optional_env:
+  - name: GRAPH_CLIENT_ID
+    description: "Microsoft Entra application (client) ID for delegated Microsoft Graph access."
+    required: true
+  - name: GRAPH_TENANT_ID
+    description: "Entra tenant ID, domain, common, organizations, or consumers. Defaults to organizations."
+    required: false
+  - name: GRAPH_REDIRECT_URI
+    description: "Public-client redirect URI. Defaults to http://localhost:8400."
+    required: false
+  - name: OUTLOOK_TOKEN_CACHE
+    description: "Optional path for the DPAPI-encrypted MSAL token cache."
+    required: false
+python_dependencies:
+  - "httpx>=0.27,<1"
+  - "msal>=1.31,<2"
+  - "msal-extensions>=1.2,<2"
+  - "pydantic>=2,<3"
+requires_hermes: ">=0.21"
