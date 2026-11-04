@@ -35,6 +35,7 @@ class ConversationService:
                     "$filter": (
                         f"conversationId eq '{odata_quote(request.conversation_id)}'"
                     ),
+                    "$orderby": "receivedDateTime asc",
                 },
             )
         values = payload.get("value")
