@@ -35,7 +35,6 @@ class ConversationService:
                     "$filter": (
                         f"conversationId eq '{odata_quote(request.conversation_id)}'"
                     ),
-                    "$orderby": "receivedDateTime asc",
                 },
             )
         values = payload.get("value")
@@ -53,6 +52,7 @@ class ConversationService:
                 for value in values
                 if isinstance(value, dict)
             ]
+        emails.sort(key=lambda email: email.get("received_at") or "")
         return {
             "conversation_id": request.conversation_id,
             "emails": emails,

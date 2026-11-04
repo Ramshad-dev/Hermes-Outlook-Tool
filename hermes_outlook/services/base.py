@@ -4,7 +4,7 @@ from typing import Any
 
 from ..config import Settings
 from ..errors import InvalidArgumentError
-from ..graph import validate_next_link
+from ..graph import GraphClient, validate_next_link
 from ..html_text import html_to_text, normalize_text, truncate
 
 MESSAGE_SUMMARY_SELECT = (

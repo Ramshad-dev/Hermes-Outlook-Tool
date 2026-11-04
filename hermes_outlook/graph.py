@@ -85,7 +85,19 @@ def _graph_error(response: httpx.Response) -> OutlookError:
         return PermissionDeniedError(detail)
     if status in {404, 410}:
         return ResourceNotFoundError(detail)
-    if status in {400, 422}:
+    if status == 400 or status == 422:
+        if code == "ErrorInvalidIdMalformed":
+            detail += (
+                " Pass the exact message_id or folder_id returned by the Outlook list "
+                "tools; webLink URLs, conversation ids, internetMessageIds, and email "
+                "addresses are not valid ids."
+            )
+        elif (
+            code == "ErrorInvalidOperation"
+            and message
+            and "conversationid" in message.lower()
+        ):
+            detail += " Use outlook_get_conversation for conversation ids."
         return InvalidArgumentError(detail)
     if status == 429:
         return GraphUnavailableError(detail, retryable=True)
