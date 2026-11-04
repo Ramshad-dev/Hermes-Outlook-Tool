@@ -12,6 +12,8 @@ from .errors import AuthenticationRequiredError, OutlookError, TokenCacheError
 
 logger = logging.getLogger(__name__)
 
+RESERVED_SCOPES = frozenset({"openid", "profile", "offline_access"})
+
 
 def _authority(tenant_id: str) -> str:
     return f"https://login.microsoftonline.com/{tenant_id}"
@@ -62,7 +64,8 @@ class GraphAuthenticator:
 
     @property
     def scopes(self) -> list[str]:
-        return list(self.settings.scopes)
+        # MSAL rejects reserved scopes as input and adds them itself.
+        return [scope for scope in self.settings.scopes if scope not in RESERVED_SCOPES]
 
     def _accounts(self) -> list[dict[str, Any]]:
         try:

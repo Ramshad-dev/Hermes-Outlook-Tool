@@ -141,6 +141,12 @@ def test_authenticator_reports_interactive_failure(settings: Settings) -> None:
         auth.login()
 
 
+def test_authenticator_strips_reserved_scopes(settings: Settings) -> None:
+    auth = GraphAuthenticator(settings, cache=object(), app=FakeApp())
+    assert "offline_access" not in auth.scopes
+    assert "Mail.ReadWrite" in auth.scopes
+
+
 def test_logout_removes_cache(settings: Settings, tmp_path: Path) -> None:
     cache_path = tmp_path / "token_cache.bin"
     cache_path.write_text("ciphertext", encoding="utf-8")

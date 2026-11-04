@@ -61,25 +61,44 @@ GRAPH_REDIRECT_URI=http://localhost:8400
 
 Optional limits: `GRAPH_SCOPES`, `GRAPH_BASE_URL`, `OUTLOOK_MAILBOX_USER`, `OUTLOOK_PAGE_SIZE`, `OUTLOOK_MAX_PAGE_SIZE`, and retry/body-size settings. See `hermes_outlook/config.py`.
 
-## Install for local development
+## Installation
 
-Hermes loads directory plugins from `$HERMES_HOME/plugins/<name>` (or one category level below it). Find the plugin directory from the active Hermes home, then link this checkout into it:
+1. **Prerequisites** — Windows, Python 3.10+, and Hermes Agent 0.21 or newer on your `PATH`.
+2. **Get the source**:
 
-```powershell
-$hermesHome = Split-Path (hermes config path)
-$plugins = Join-Path $hermesHome "plugins"
-New-Item -ItemType Directory -Force $plugins | Out-Null
-New-Item -ItemType Junction -Path (Join-Path $plugins "outlook") -Target (Get-Location)
-hermes plugins list
-hermes plugins enable outlook --no-allow-tool-override
-```
+   ```powershell
+   git clone <repo-url> hermes-outlook-tool
+   cd hermes-outlook-tool
+   ```
 
-Validate the plugin with the real Hermes runtime contracts:
+3. **Register the plugin with Hermes** — Hermes loads directory plugins from `$HERMES_HOME/plugins/<name>` (or one category level below it). Link this checkout into that directory:
 
-```powershell
-hermes plugins doctor . --ci
-hermes plugins validate . --install-deps
-```
+   ```powershell
+   $hermesHome = Split-Path (hermes config path)
+   $plugins = Join-Path $hermesHome "plugins"
+   New-Item -ItemType Directory -Force $plugins | Out-Null
+   New-Item -ItemType Junction -Path (Join-Path $plugins "outlook") -Target (Get-Location)
+   hermes plugins list
+   hermes plugins enable outlook --no-allow-tool-override
+   ```
+
+4. **Install dependencies** (also validates the plugin against the real Hermes runtime contracts):
+
+   ```powershell
+   hermes plugins doctor . --ci
+   hermes plugins validate . --install-deps
+   ```
+
+   Or install manually into the active environment:
+
+   ```powershell
+   pip install -e ".[dev]"
+   ```
+
+5. **Configure** the Entra app registration (see above) and set `GRAPH_CLIENT_ID` in the Hermes environment file from `hermes config env-path`.
+6. **Sign in and verify** — follow [Sign in and test](#sign-in-and-test) below.
+
+To update later, `git pull` in this checkout — the junction keeps the plugin current automatically.
 
 ## Sign in and test
 
